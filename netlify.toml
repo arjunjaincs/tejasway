@@ -1,0 +1,15 @@
+[build]
+  # Build command for Vite
+  command = "npm run build"
+  # Vite outputs to 'dist' directory by default
+  publish = "dist"
+
+# Redirect all routes to index.html for client-side routing (React Router)
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# Optional: Set Node.js version
+[build.environment]
+  NODE_VERSION = "18"
