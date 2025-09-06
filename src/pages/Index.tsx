@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
-import { Database, Bell, FileText, BarChart3, Shield, Users } from "lucide-react"
+import { Database, Bell, FileText, BarChart3, Shield, Users, Sparkles } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { ThreeDBackground } from "@/components/3d-background"
@@ -53,6 +53,7 @@ const landingBulletins = [
 const Index = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [userRole, setUserRole] = useState("")
+  const [easterEggActive, setEasterEggActive] = useState(false)
   const { t } = useTranslation()
 
   useEffect(() => {
@@ -78,6 +79,17 @@ const Index = () => {
     sessionStorage.removeItem("kmrl:isLoggedIn")
   }
 
+  const handleEasterEgg = () => {
+    setEasterEggActive(!easterEggActive)
+    document.body.style.filter = easterEggActive ? "none" : "hue-rotate(180deg) saturate(1.5)"
+    setTimeout(() => {
+      if (!easterEggActive) {
+        document.body.style.filter = "none"
+        setEasterEggActive(false)
+      }
+    }, 3000)
+  }
+
   if (isLoggedIn) {
     return <Dashboard userRole={userRole} onLogout={handleLogout} />
   }
@@ -101,7 +113,7 @@ const Index = () => {
                 <Database className="w-6 h-6 text-primary-foreground" />
               </div>
               <div>
-                <h1 className="text-xl font-bold text-foreground">{t("KMRL DocuFlow")}</h1>
+                <h1 className="text-xl font-bold text-foreground">{t("KMRL Dashboard")}</h1>
                 <p className="text-sm text-muted-foreground">{t("Employee Portal")}</p>
               </div>
             </motion.div>
@@ -302,8 +314,43 @@ const Index = () => {
               </ul>
             </div>
           </div>
-          <div className="border-t border-border/50 pt-4 text-center text-sm text-muted-foreground">
-            {t("© 2025 KMRL DocuFlow - Employee Portal")}
+          <div className="border-t border-border/50 pt-6">
+            <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+              <div className="text-center md:text-left">
+                <div className="text-sm text-muted-foreground mb-2">{t("© 2025 KMRL Dashboard - Employee Portal")}</div>
+                <div className="flex items-center gap-2 justify-center md:justify-start">
+                  <span className="text-sm font-medium text-foreground">{t("footer.builtBy")}</span>
+                  <motion.div
+                    animate={{ rotate: [0, 10, -10, 0] }}
+                    transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY, repeatDelay: 3 }}
+                  >
+                    ✨
+                  </motion.div>
+                </div>
+              </div>
+              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleEasterEgg}
+                  className={`relative overflow-hidden transition-all duration-300 ${
+                    easterEggActive
+                      ? "bg-gradient-to-r from-purple-500 to-pink-500 text-white border-transparent"
+                      : "hover:bg-accent"
+                  }`}
+                >
+                  <Sparkles className="w-4 h-4 mr-2" />
+                  {t("footer.easterEgg")}
+                  {easterEggActive && (
+                    <motion.div
+                      className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
+                      animate={{ x: [-100, 100] }}
+                      transition={{ duration: 1, repeat: Number.POSITIVE_INFINITY }}
+                    />
+                  )}
+                </Button>
+              </motion.div>
+            </div>
           </div>
         </div>
       </footer>

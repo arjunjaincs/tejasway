@@ -21,7 +21,7 @@ interface Message {
 const initialMessages: Message[] = [
   {
     id: 1,
-    text: "Hello! I'm your KMRL DocuFlow assistant. How can I help you today?",
+    text: "Hello! I'm your KMRL Dashboard assistant. How can I help you today?",
     isBot: true,
     timestamp: new Date(),
   },
