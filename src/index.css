@@ -1,0 +1,178 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    /* KMRL Brand Colors */
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+
+    /* KMRL Primary Blue */
+    --primary: 217 91% 60%;
+    --primary-foreground: 0 0% 98%;
+    --primary-glow: 217 91% 70%;
+
+    /* Cards & Surfaces */
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --card-glass: 0 0% 100% / 0.8;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+
+    /* Semantic Colors */
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+
+    --accent: 217 91% 60%;
+    --accent-foreground: 0 0% 98%;
+
+    /* Status Colors */
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --success: 142 76% 36%;
+    --success-foreground: 355 100% 97%;
+
+    --warning: 43 96% 56%;
+    --warning-foreground: 222.2 84% 4.9%;
+
+    --info: 217 91% 60%;
+    --info-foreground: 0 0% 98%;
+
+    /* Interactive Elements */
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 217 91% 60%;
+
+    /* Layout */
+    --radius: 0.75rem;
+
+    /* Sidebar - Light Mode */
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 222.2 84% 4.9%;
+    --sidebar-primary: 217 91% 60%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 210 40% 96.1%;
+    --sidebar-accent-foreground: 222.2 84% 4.9%;
+    --sidebar-border: 214.3 31.8% 91.4%;
+    --sidebar-ring: 217 91% 60%;
+
+    /* 3D & Animation */
+    --gradient-primary: linear-gradient(135deg, hsl(217 91% 60%), hsl(217 91% 70%));
+    --gradient-glass: linear-gradient(135deg, hsl(0 0% 100% / 0.1), hsl(0 0% 100% / 0.05));
+    --shadow-glow: 0 0 40px hsl(217 91% 60% / 0.3);
+    --shadow-card: 0 10px 30px -10px hsl(222.2 84% 4.9% / 0.1);
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .dark {
+    /* Dark Mode Base */
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+
+    /* Cards in Dark Mode */
+    --card: 217.2 32.6% 17.5%;
+    --card-foreground: 210 40% 98%;
+    --card-glass: 217.2 32.6% 17.5% / 0.8;
+
+    --popover: 217.2 32.6% 17.5%;
+    --popover-foreground: 210 40% 98%;
+
+    /* KMRL Primary remains consistent */
+    --primary: 217 91% 60%;
+    --primary-foreground: 0 0% 98%;
+
+    /* Adjusted Secondary */
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+
+    --accent: 217 91% 60%;
+    --accent-foreground: 0 0% 98%;
+
+    /* Status Colors - Darker Variants */
+    --destructive: 0 62.8% 50.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --success: 142 76% 46%;
+    --success-foreground: 0 0% 98%;
+
+    --warning: 43 96% 66%;
+    --warning-foreground: 222.2 84% 4.9%;
+
+    /* Dark Interactive */
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 217 91% 60%;
+
+    /* Sidebar - Dark Mode */
+    --sidebar-background: 217.2 32.6% 17.5%;
+    --sidebar-foreground: 210 40% 98%;
+    --sidebar-primary: 217 91% 60%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 222.2 84% 4.9%;
+    --sidebar-accent-foreground: 210 40% 98%;
+    --sidebar-border: 222.2 84% 4.9%;
+    --sidebar-ring: 217 91% 60%;
+
+    /* 3D & Animation Dark */
+    --gradient-glass: linear-gradient(135deg, hsl(217.2 32.6% 17.5% / 0.3), hsl(217.2 32.6% 17.5% / 0.1));
+    --shadow-glow: 0 0 40px hsl(217 91% 60% / 0.4);
+    --shadow-card: 0 10px 30px -10px hsl(0 0% 0% / 0.3);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+    /* Removed all smooth transitions that were causing lag */
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    /* Removed body transitions for better performance */
+  }
+
+  /* Removed all transition styles for interactive elements */
+
+  /* Sleek, accessible scrollbar styling for WebKit and Firefox */
+  html {
+    /* Firefox */
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--muted-foreground) / 0.7) hsl(var(--secondary));
+  }
+
+  /* WebKit-based browsers */
+  *::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  *::-webkit-scrollbar-track {
+    background: hsl(var(--secondary));
+    border-radius: 9999px;
+  }
+  *::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, hsl(var(--primary) / 0.55), hsl(var(--accent) / 0.55));
+    border-radius: 9999px;
+    border: 2px solid hsl(var(--secondary));
+  }
+  *::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, hsl(var(--primary) / 0.75), hsl(var(--accent) / 0.75));
+  }
+}
+
+/* Utility to ensure GPU acceleration when used */
+.transform-gpu {
+  transform: translateZ(0);
+}
