@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
-import { Database, Bell, FileText, BarChart3, Shield, Users, Sparkles } from "lucide-react"
+import { Database, Bell, FileText, BarChart3, Shield, Users, Heart } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { ThreeDBackground } from "@/components/3d-background"
@@ -53,7 +53,6 @@ const landingBulletins = [
 const Index = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [userRole, setUserRole] = useState("")
-  const [easterEggActive, setEasterEggActive] = useState(false)
   const { t } = useTranslation()
 
   useEffect(() => {
@@ -79,16 +78,50 @@ const Index = () => {
     sessionStorage.removeItem("kmrl:isLoggedIn")
   }
 
-  const handleEasterEgg = () => {
-    setEasterEggActive(!easterEggActive)
-    document.body.style.filter = easterEggActive ? "none" : "hue-rotate(180deg) saturate(1.5)"
-    setTimeout(() => {
-      if (!easterEggActive) {
-        document.body.style.filter = "none"
-        setEasterEggActive(false)
-      }
-    }, 3000)
+  const createConfetti = () => {
+    const colors = ["#ff6b6b", "#4ecdc4", "#45b7d1", "#96ceb4", "#ffeaa7", "#dda0dd", "#98d8c8"]
+
+    for (let i = 0; i < 50; i++) {
+      const confetti = document.createElement("div")
+      confetti.style.position = "fixed"
+      confetti.style.left = Math.random() * 100 + "vw"
+      confetti.style.top = "-10px"
+      confetti.style.width = "10px"
+      confetti.style.height = "10px"
+      confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)]
+      confetti.style.borderRadius = "50%"
+      confetti.style.pointerEvents = "none"
+      confetti.style.zIndex = "9999"
+      confetti.style.animation = `confetti-fall ${Math.random() * 3 + 2}s linear forwards`
+
+      document.body.appendChild(confetti)
+
+      setTimeout(() => {
+        confetti.remove()
+      }, 5000)
+    }
   }
+
+  useEffect(() => {
+    const style = document.createElement("style")
+    style.textContent = `
+      @keyframes confetti-fall {
+        0% {
+          transform: translateY(-10px) rotate(0deg);
+          opacity: 1;
+        }
+        100% {
+          transform: translateY(100vh) rotate(720deg);
+          opacity: 0;
+        }
+      }
+    `
+    document.head.appendChild(style)
+
+    return () => {
+      document.head.removeChild(style)
+    }
+  }, [])
 
   if (isLoggedIn) {
     return <Dashboard userRole={userRole} onLogout={handleLogout} />
@@ -251,105 +284,160 @@ const Index = () => {
       </main>
 
       {/* Footer */}
-      <footer className="relative z-10 border-t border-border/50 bg-background/80 backdrop-blur-sm mt-16">
-        <div className="container mx-auto px-6 py-8">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-6">
+      <footer className="relative z-10 border-t border-border/50 bg-gradient-to-br from-background/95 to-background/80 backdrop-blur-sm mt-16">
+        <div className="container mx-auto px-6 py-12">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+            <div className="md:col-span-1">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-8 h-8 bg-gradient-primary rounded-lg flex items-center justify-center">
+                  <Database className="w-5 h-5 text-primary-foreground" />
+                </div>
+                <h3 className="font-bold text-lg text-foreground">KMRL Dashboard</h3>
+              </div>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                Empowering employees with seamless document management and real-time collaboration tools.
+              </p>
+            </div>
+
             <div>
-              <h3 className="font-semibold text-foreground mb-3">{t("footer.quickLinks")}</h3>
-              <ul className="space-y-2 text-sm text-muted-foreground">
+              <h3 className="font-semibold text-foreground mb-4 text-sm uppercase tracking-wide">
+                {t("footer.quickLinks")}
+              </h3>
+              <ul className="space-y-3 text-sm">
                 <li>
-                  <a href="#" className="hover:text-primary transition-colors">
+                  <a
+                    href="#"
+                    className="text-muted-foreground hover:text-primary transition-colors duration-200 flex items-center gap-2"
+                  >
+                    <span className="w-1 h-1 bg-primary rounded-full"></span>
                     {t("footer.employeeHandbook")}
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="hover:text-primary transition-colors">
+                  <a
+                    href="#"
+                    className="text-muted-foreground hover:text-primary transition-colors duration-200 flex items-center gap-2"
+                  >
+                    <span className="w-1 h-1 bg-primary rounded-full"></span>
                     {t("footer.itSupport")}
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="hover:text-primary transition-colors">
+                  <a
+                    href="#"
+                    className="text-muted-foreground hover:text-primary transition-colors duration-200 flex items-center gap-2"
+                  >
+                    <span className="w-1 h-1 bg-primary rounded-full"></span>
                     {t("footer.documentGuidelines")}
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="hover:text-primary transition-colors">
+                  <a
+                    href="#"
+                    className="text-muted-foreground hover:text-primary transition-colors duration-200 flex items-center gap-2"
+                  >
+                    <span className="w-1 h-1 bg-primary rounded-full"></span>
                     {t("footer.trainingResources")}
                   </a>
                 </li>
               </ul>
             </div>
+
             <div>
-              <h3 className="font-semibold text-foreground mb-3">{t("footer.departments")}</h3>
-              <ul className="space-y-2 text-sm text-muted-foreground">
+              <h3 className="font-semibold text-foreground mb-4 text-sm uppercase tracking-wide">
+                {t("footer.departments")}
+              </h3>
+              <ul className="space-y-3 text-sm">
                 <li>
-                  <a href="#" className="hover:text-primary transition-colors">
+                  <a
+                    href="#"
+                    className="text-muted-foreground hover:text-primary transition-colors duration-200 flex items-center gap-2"
+                  >
+                    <span className="w-1 h-1 bg-primary rounded-full"></span>
                     {t("footer.trainOperations")}
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="hover:text-primary transition-colors">
+                  <a
+                    href="#"
+                    className="text-muted-foreground hover:text-primary transition-colors duration-200 flex items-center gap-2"
+                  >
+                    <span className="w-1 h-1 bg-primary rounded-full"></span>
                     {t("footer.engineering")}
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="hover:text-primary transition-colors">
+                  <a
+                    href="#"
+                    className="text-muted-foreground hover:text-primary transition-colors duration-200 flex items-center gap-2"
+                  >
+                    <span className="w-1 h-1 bg-primary rounded-full"></span>
                     {t("footer.safetyAndSecurity")}
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="hover:text-primary transition-colors">
+                  <a
+                    href="#"
+                    className="text-muted-foreground hover:text-primary transition-colors duration-200 flex items-center gap-2"
+                  >
+                    <span className="w-1 h-1 bg-primary rounded-full"></span>
                     {t("footer.administration")}
                   </a>
                 </li>
               </ul>
             </div>
+
             <div>
-              <h3 className="font-semibold text-foreground mb-3">{t("footer.contact")}</h3>
-              <ul className="space-y-2 text-sm text-muted-foreground">
-                <li>{t("footer.helpdesk")}: ext. 2500</li>
-                <li>{t("footer.itSupport")}: ext. 2501</li>
-                <li>{t("footer.emergencyLine")}: ext. 911</li>
-                <li>{t("footer.hrDepartment")}: ext. 2502</li>
+              <h3 className="font-semibold text-foreground mb-4 text-sm uppercase tracking-wide">
+                {t("footer.contact")}
+              </h3>
+              <ul className="space-y-3 text-sm text-muted-foreground">
+                <li className="flex items-center gap-2">
+                  <span className="w-1 h-1 bg-success rounded-full"></span>
+                  {t("footer.helpdesk")}: ext. 2500
+                </li>
+                <li className="flex items-center gap-2">
+                  <span className="w-1 h-1 bg-info rounded-full"></span>
+                  {t("footer.itSupport")}: ext. 2501
+                </li>
+                <li className="flex items-center gap-2">
+                  <span className="w-1 h-1 bg-warning rounded-full"></span>
+                  {t("footer.emergencyLine")}: ext. 911
+                </li>
+                <li className="flex items-center gap-2">
+                  <span className="w-1 h-1 bg-primary rounded-full"></span>
+                  {t("footer.hrDepartment")}: ext. 2502
+                </li>
               </ul>
             </div>
           </div>
-          <div className="border-t border-border/50 pt-6">
-            <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+
+          <div className="border-t border-border/30 pt-8">
+            <div className="flex flex-col md:flex-row items-center justify-between gap-6">
               <div className="text-center md:text-left">
-                <div className="text-sm text-muted-foreground mb-2">{t("© 2025 KMRL Dashboard - Employee Portal")}</div>
+                <div className="text-sm text-muted-foreground mb-3">
+                  © 2025 KMRL Dashboard - Employee Portal. All rights reserved.
+                </div>
                 <div className="flex items-center gap-2 justify-center md:justify-start">
-                  <span className="text-sm font-medium text-foreground">{t("footer.builtBy")}</span>
-                  <motion.div
-                    animate={{ rotate: [0, 10, -10, 0] }}
-                    transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY, repeatDelay: 3 }}
+                  <span className="text-sm text-muted-foreground">Built with</span>
+                  <Heart className="w-4 h-4 text-red-500 animate-pulse" />
+                  <span className="text-sm text-muted-foreground">by team</span>
+                  <motion.button
+                    onClick={createConfetti}
+                    className="text-sm font-semibold text-primary hover:text-primary/80 transition-colors duration-200 underline decoration-2 underline-offset-2 hover:decoration-primary/60"
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
                   >
-                    ✨
-                  </motion.div>
+                    Tejasway
+                  </motion.button>
                 </div>
               </div>
-              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={handleEasterEgg}
-                  className={`relative overflow-hidden transition-all duration-300 ${
-                    easterEggActive
-                      ? "bg-gradient-to-r from-purple-500 to-pink-500 text-white border-transparent"
-                      : "hover:bg-accent"
-                  }`}
-                >
-                  <Sparkles className="w-4 h-4 mr-2" />
-                  {t("footer.easterEgg")}
-                  {easterEggActive && (
-                    <motion.div
-                      className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
-                      animate={{ x: [-100, 100] }}
-                      transition={{ duration: 1, repeat: Number.POSITIVE_INFINITY }}
-                    />
-                  )}
-                </Button>
-              </motion.div>
+
+              <div className="flex items-center gap-4 text-xs text-muted-foreground">
+                <span>Made in India</span>
+                <span className="w-1 h-1 bg-muted-foreground rounded-full"></span>
+                <span>Powered by Innovation</span>
+              </div>
             </div>
           </div>
         </div>
