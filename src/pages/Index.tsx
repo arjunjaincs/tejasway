@@ -50,12 +50,21 @@ const landingBulletins = [
   },
 ]
 
-const teamMembers = ["Arjun Jain", "Nimish Ratra", "Aditya Kumar Jha", "Nishtha Jain", "Ashita Chaudhary"]
+const teamMembers = [
+  "Arjun Jain",
+  "Nimish Ratra",
+  "Aditya Kumar Jha",
+  "Nishtha Jain",
+  "Ashita Chaudhary",
+  "Tejasway Team",
+]
 
 const Index = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [userRole, setUserRole] = useState("")
-  const [teamPopups, setTeamPopups] = useState<Array<{ id: number; name: string; x: number; y: number }>>([])
+  const [teamPopups, setTeamPopups] = useState<
+    Array<{ id: number; name: string; x: number; y: number; delay?: number }>
+  >([])
   const { t } = useTranslation()
 
   useEffect(() => {
@@ -108,27 +117,20 @@ const Index = () => {
   const handleTejasWayClick = () => {
     createConfetti()
 
-    // Create 2-3 random team member popups
-    const numPopups = Math.floor(Math.random() * 2) + 2
-    const newPopups = []
-
-    for (let i = 0; i < numPopups; i++) {
-      const randomMember = teamMembers[Math.floor(Math.random() * teamMembers.length)]
-      const popup = {
-        id: Date.now() + i,
-        name: randomMember,
-        x: Math.random() * (window.innerWidth - 200),
-        y: Math.random() * (window.innerHeight - 100) + 100,
-      }
-      newPopups.push(popup)
-    }
+    const newPopups = teamMembers.map((member, index) => ({
+      id: Date.now() + index,
+      name: member,
+      x: Math.random() * (window.innerWidth - 250) + 25,
+      y: Math.random() * (window.innerHeight - 200) + 100,
+      delay: index * 0.1, // Stagger the animations
+    }))
 
     setTeamPopups((prev) => [...prev, ...newPopups])
 
-    // Remove popups after 3 seconds
+    // Remove popups after 4 seconds with smooth fade out
     setTimeout(() => {
       setTeamPopups((prev) => prev.filter((popup) => !newPopups.some((newPopup) => newPopup.id === popup.id)))
-    }, 3000)
+    }, 4000)
   }
 
   useEffect(() => {
@@ -145,27 +147,49 @@ const Index = () => {
         }
       }
       
-      @keyframes popup-bounce {
+      @keyframes bubble-float {
         0% {
-          transform: scale(0) rotate(-10deg);
+          transform: scale(0) translateY(20px) rotate(-5deg);
           opacity: 0;
         }
+        20% {
+          transform: scale(1.1) translateY(-10px) rotate(2deg);
+          opacity: 1;
+        }
         50% {
-          transform: scale(1.1) rotate(5deg);
+          transform: scale(1) translateY(-20px) rotate(-1deg);
+          opacity: 1;
+        }
+        80% {
+          transform: scale(1.05) translateY(-15px) rotate(1deg);
           opacity: 1;
         }
         100% {
-          transform: scale(1) rotate(0deg);
-          opacity: 1;
+          transform: scale(0.8) translateY(-30px) rotate(0deg);
+          opacity: 0;
         }
       }
       
-      @keyframes popup-float {
+      @keyframes bubble-drift {
         0%, 100% {
-          transform: translateY(0px);
+          transform: translateX(0px);
+        }
+        25% {
+          transform: translateX(15px);
+        }
+        75% {
+          transform: translateX(-10px);
+        }
+      }
+      
+      @keyframes sparkle {
+        0%, 100% {
+          opacity: 0;
+          transform: scale(0);
         }
         50% {
-          transform: translateY(-10px);
+          opacity: 1;
+          transform: scale(1);
         }
       }
     `
@@ -185,35 +209,59 @@ const Index = () => {
       {/* 3D Background */}
       <ThreeDBackground />
 
-      {teamPopups.map((popup) => (
+      {teamPopups.map((popup, index) => (
         <motion.div
           key={popup.id}
           className="fixed z-[10000] pointer-events-none"
           style={{ left: popup.x, top: popup.y }}
-          initial={{ scale: 0, rotate: -10, opacity: 0 }}
+          initial={{ scale: 0, y: 20, opacity: 0, rotate: -5 }}
           animate={{
-            scale: 1,
-            rotate: 0,
-            opacity: 1,
-            y: [0, -10, 0],
+            scale: [0, 1.1, 1, 1.05, 0.8],
+            y: [20, -10, -20, -15, -30],
+            opacity: [0, 1, 1, 1, 0],
+            rotate: [-5, 2, -1, 1, 0],
+            x: [0, 15, -10, 0],
           }}
-          exit={{ scale: 0, opacity: 0 }}
           transition={{
-            duration: 0.5,
-            y: {
-              duration: 2,
-              repeat: Number.POSITIVE_INFINITY,
-              ease: "easeInOut",
-            },
+            duration: 4,
+            delay: popup.delay || 0,
+            ease: "easeInOut",
+            times: [0, 0.2, 0.5, 0.8, 1],
           }}
         >
-          <div className="bg-gradient-to-r from-purple-500 via-pink-500 to-blue-500 p-[2px] rounded-full shadow-2xl">
-            <div className="bg-background/95 backdrop-blur-sm rounded-full px-4 py-2 shadow-lg">
-              <div className="flex items-center gap-2">
-                <div className="w-2 h-2 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full animate-pulse"></div>
-                <span className="text-sm font-semibold text-foreground whitespace-nowrap">{popup.name}</span>
-                <div className="w-2 h-2 bg-gradient-to-r from-green-400 to-blue-500 rounded-full animate-pulse"></div>
+          <div className="relative">
+            {/* Sparkle effects around the bubble */}
+            <div className="absolute -top-2 -left-2 w-2 h-2 bg-yellow-400 rounded-full animate-ping opacity-75"></div>
+            <div className="absolute -bottom-1 -right-2 w-1.5 h-1.5 bg-pink-400 rounded-full animate-pulse"></div>
+            <div className="absolute top-1 -right-3 w-1 h-1 bg-blue-400 rounded-full animate-bounce"></div>
+
+            {/* Main bubble */}
+            <div className="bg-gradient-to-br from-purple-500 via-pink-500 to-blue-500 p-[3px] rounded-full shadow-2xl animate-pulse">
+              <div className="bg-gradient-to-br from-white/95 to-white/80 backdrop-blur-sm rounded-full px-6 py-3 shadow-xl border border-white/20">
+                <div className="flex items-center gap-3">
+                  <div className="w-3 h-3 bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 rounded-full animate-spin"></div>
+                  <span className="text-sm font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent whitespace-nowrap">
+                    {popup.name}
+                  </span>
+                  <div className="w-3 h-3 bg-gradient-to-r from-green-400 via-blue-500 to-purple-500 rounded-full animate-bounce"></div>
+                </div>
               </div>
+            </div>
+
+            {/* Floating sparkles */}
+            <div className="absolute inset-0 pointer-events-none">
+              <div
+                className="absolute top-0 left-1/2 w-1 h-1 bg-white rounded-full animate-ping"
+                style={{ animationDelay: "0.5s" }}
+              ></div>
+              <div
+                className="absolute bottom-0 right-1/4 w-0.5 h-0.5 bg-yellow-300 rounded-full animate-pulse"
+                style={{ animationDelay: "1s" }}
+              ></div>
+              <div
+                className="absolute top-1/2 left-0 w-0.5 h-0.5 bg-pink-300 rounded-full animate-bounce"
+                style={{ animationDelay: "1.5s" }}
+              ></div>
             </div>
           </div>
         </motion.div>
