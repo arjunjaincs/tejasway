@@ -142,8 +142,8 @@ const Index = () => {
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.5 }}
             >
-              <div className="w-10 h-10 bg-gradient-primary rounded-xl flex items-center justify-center shadow-glow overflow-hidden">
-                <img src="/kmrl-logo.jpg" alt="KMRL Tejasway Logo" className="w-8 h-8 object-contain" />
+              <div className="w-10 h-10 flex items-center justify-center overflow-hidden">
+                <img src="/kmrl-logo.jpg" alt="KMRL Tejasway Logo" className="w-10 h-10 object-contain" />
               </div>
               <div>
                 <h1 className="text-xl font-bold text-foreground">{t("KMRL Dashboard")}</h1>
@@ -289,8 +289,8 @@ const Index = () => {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
             <div className="md:col-span-1">
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-8 h-8 bg-gradient-primary rounded-lg flex items-center justify-center overflow-hidden">
-                  <img src="/kmrl-logo.jpg" alt="KMRL Tejasway Logo" className="w-6 h-6 object-contain" />
+                <div className="w-8 h-8 flex items-center justify-center overflow-hidden">
+                  <img src="/kmrl-logo.jpg" alt="KMRL Tejasway Logo" className="w-8 h-8 object-contain" />
                 </div>
                 <h3 className="font-bold text-lg text-foreground">KMRL Dashboard</h3>
               </div>
