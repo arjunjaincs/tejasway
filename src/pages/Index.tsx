@@ -56,7 +56,7 @@ const teamMembers = [
   "Aditya Kumar Jha",
   "Nishtha Jain",
   "Ashita Chaudhary",
-  "Tejasway Team",
+  "Sarthak Mehra", // Keeping only the 6 actual team member names
 ]
 
 const Index = () => {
@@ -117,13 +117,35 @@ const Index = () => {
   const handleTejasWayClick = () => {
     createConfetti()
 
-    const newPopups = teamMembers.map((member, index) => ({
-      id: Date.now() + index,
-      name: member,
-      x: Math.random() * (window.innerWidth - 250) + 25,
-      y: Math.random() * (window.innerHeight - 200) + 100,
-      delay: index * 0.1, // Stagger the animations
-    }))
+    const screenWidth = window.innerWidth
+    const screenHeight = window.innerHeight
+    const bubbleWidth = 250
+    const bubbleHeight = 80
+
+    const newPopups = teamMembers.map((member, index) => {
+      // Create a more even distribution pattern
+      const cols = Math.ceil(Math.sqrt(teamMembers.length))
+      const rows = Math.ceil(teamMembers.length / cols)
+
+      const col = index % cols
+      const row = Math.floor(index / cols)
+
+      // Calculate base positions with some randomness
+      const baseX = (screenWidth / (cols + 1)) * (col + 1) - bubbleWidth / 2
+      const baseY = (screenHeight / (rows + 2)) * (row + 1) + 100
+
+      // Add random offset for natural look
+      const randomOffsetX = (Math.random() - 0.5) * 100
+      const randomOffsetY = (Math.random() - 0.5) * 80
+
+      return {
+        id: Date.now() + index,
+        name: member,
+        x: Math.max(25, Math.min(screenWidth - bubbleWidth - 25, baseX + randomOffsetX)),
+        y: Math.max(100, Math.min(screenHeight - bubbleHeight - 100, baseY + randomOffsetY)),
+        delay: index * 0.15, // Slightly increased stagger for better visual flow
+      }
+    })
 
     setTeamPopups((prev) => [...prev, ...newPopups])
 
