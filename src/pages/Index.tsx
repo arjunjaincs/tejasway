@@ -56,7 +56,7 @@ const teamMembers = [
   "Aditya Kumar Jha",
   "Nishtha Jain",
   "Ashita Chaudhary",
-  "Sarthak Mehra", // Keeping only the 6 actual team member names
+  "Sarthak Mehra",
 ]
 
 const Index = () => {
@@ -119,40 +119,38 @@ const Index = () => {
 
     const screenWidth = window.innerWidth
     const screenHeight = window.innerHeight
-    const bubbleWidth = 250
-    const bubbleHeight = 80
+    const bubbleWidth = 200
+    const bubbleHeight = 60
 
     const newPopups = teamMembers.map((member, index) => {
-      // Create a more even distribution pattern
-      const cols = Math.ceil(Math.sqrt(teamMembers.length))
-      const rows = Math.ceil(teamMembers.length / cols)
+      // Use a more efficient circular distribution pattern
+      const angle = (index / teamMembers.length) * 2 * Math.PI
+      const radius = Math.min(screenWidth, screenHeight) * 0.25
+      const centerX = screenWidth / 2
+      const centerY = screenHeight / 2
 
-      const col = index % cols
-      const row = Math.floor(index / cols)
+      // Calculate positions in a circle with slight randomization
+      const baseX = centerX + Math.cos(angle) * radius - bubbleWidth / 2
+      const baseY = centerY + Math.sin(angle) * radius - bubbleHeight / 2
 
-      // Calculate base positions with some randomness
-      const baseX = (screenWidth / (cols + 1)) * (col + 1) - bubbleWidth / 2
-      const baseY = (screenHeight / (rows + 2)) * (row + 1) + 100
-
-      // Add random offset for natural look
-      const randomOffsetX = (Math.random() - 0.5) * 100
-      const randomOffsetY = (Math.random() - 0.5) * 80
+      // Smaller random offset for smoother animation
+      const randomOffsetX = (Math.random() - 0.5) * 60
+      const randomOffsetY = (Math.random() - 0.5) * 40
 
       return {
         id: Date.now() + index,
         name: member,
-        x: Math.max(25, Math.min(screenWidth - bubbleWidth - 25, baseX + randomOffsetX)),
-        y: Math.max(100, Math.min(screenHeight - bubbleHeight - 100, baseY + randomOffsetY)),
-        delay: index * 0.15, // Slightly increased stagger for better visual flow
+        x: Math.max(20, Math.min(screenWidth - bubbleWidth - 20, baseX + randomOffsetX)),
+        y: Math.max(80, Math.min(screenHeight - bubbleHeight - 80, baseY + randomOffsetY)),
+        delay: index * 0.1, // Reduced delay for smoother flow
       }
     })
 
     setTeamPopups((prev) => [...prev, ...newPopups])
 
-    // Remove popups after 4 seconds with smooth fade out
     setTimeout(() => {
       setTeamPopups((prev) => prev.filter((popup) => !newPopups.some((newPopup) => newPopup.id === popup.id)))
-    }, 4000)
+    }, 3500)
   }
 
   useEffect(() => {
@@ -166,52 +164,6 @@ const Index = () => {
         100% {
           transform: translateY(100vh) rotate(720deg);
           opacity: 0;
-        }
-      }
-      
-      @keyframes bubble-float {
-        0% {
-          transform: scale(0) translateY(20px) rotate(-5deg);
-          opacity: 0;
-        }
-        20% {
-          transform: scale(1.1) translateY(-10px) rotate(2deg);
-          opacity: 1;
-        }
-        50% {
-          transform: scale(1) translateY(-20px) rotate(-1deg);
-          opacity: 1;
-        }
-        80% {
-          transform: scale(1.05) translateY(-15px) rotate(1deg);
-          opacity: 1;
-        }
-        100% {
-          transform: scale(0.8) translateY(-30px) rotate(0deg);
-          opacity: 0;
-        }
-      }
-      
-      @keyframes bubble-drift {
-        0%, 100% {
-          transform: translateX(0px);
-        }
-        25% {
-          transform: translateX(15px);
-        }
-        75% {
-          transform: translateX(-10px);
-        }
-      }
-      
-      @keyframes sparkle {
-        0%, 100% {
-          opacity: 0;
-          transform: scale(0);
-        }
-        50% {
-          opacity: 1;
-          transform: scale(1);
         }
       }
     `
@@ -231,59 +183,42 @@ const Index = () => {
       {/* 3D Background */}
       <ThreeDBackground />
 
-      {teamPopups.map((popup, index) => (
+      {teamPopups.map((popup) => (
         <motion.div
           key={popup.id}
           className="fixed z-[10000] pointer-events-none"
           style={{ left: popup.x, top: popup.y }}
-          initial={{ scale: 0, y: 20, opacity: 0, rotate: -5 }}
+          initial={{ scale: 0, y: 10, opacity: 0 }}
           animate={{
-            scale: [0, 1.1, 1, 1.05, 0.8],
-            y: [20, -10, -20, -15, -30],
+            scale: [0, 1.05, 1, 0.95, 0],
+            y: [10, -5, -10, -8, -15],
             opacity: [0, 1, 1, 1, 0],
-            rotate: [-5, 2, -1, 1, 0],
-            x: [0, 15, -10, 0],
           }}
           transition={{
-            duration: 4,
+            duration: 3.5,
             delay: popup.delay || 0,
-            ease: "easeInOut",
-            times: [0, 0.2, 0.5, 0.8, 1],
+            ease: [0.25, 0.46, 0.45, 0.94], // Custom easing for smoother animation
+            times: [0, 0.25, 0.5, 0.75, 1],
           }}
         >
           <div className="relative">
-            {/* Sparkle effects around the bubble */}
-            <div className="absolute -top-2 -left-2 w-2 h-2 bg-yellow-400 rounded-full animate-ping opacity-75"></div>
-            <div className="absolute -bottom-1 -right-2 w-1.5 h-1.5 bg-pink-400 rounded-full animate-pulse"></div>
-            <div className="absolute top-1 -right-3 w-1 h-1 bg-blue-400 rounded-full animate-bounce"></div>
+            <div className="absolute -top-1 -left-1 w-1.5 h-1.5 bg-yellow-400 rounded-full opacity-75 animate-pulse"></div>
+            <div
+              className="absolute -bottom-1 -right-1 w-1 h-1 bg-pink-400 rounded-full opacity-60 animate-pulse"
+              style={{ animationDelay: "0.5s" }}
+            ></div>
 
-            {/* Main bubble */}
-            <div className="bg-gradient-to-br from-purple-500 via-pink-500 to-blue-500 p-[3px] rounded-full shadow-2xl animate-pulse">
-              <div className="bg-gradient-to-br from-white/95 to-white/80 backdrop-blur-sm rounded-full px-6 py-3 shadow-xl border border-white/20">
-                <div className="flex items-center gap-3">
-                  <div className="w-3 h-3 bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 rounded-full animate-spin"></div>
-                  <span className="text-sm font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent whitespace-nowrap">
+            {/* Main bubble with optimized styling */}
+            <div className="bg-gradient-to-br from-purple-500 via-pink-500 to-blue-500 p-[2px] rounded-full shadow-lg">
+              <div className="bg-white/95 backdrop-blur-sm rounded-full px-4 py-2 shadow-md border border-white/30">
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full"></div>
+                  <span className="text-xs font-semibold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent whitespace-nowrap">
                     {popup.name}
                   </span>
-                  <div className="w-3 h-3 bg-gradient-to-r from-green-400 via-blue-500 to-purple-500 rounded-full animate-bounce"></div>
+                  <div className="w-2 h-2 bg-gradient-to-r from-green-400 to-blue-500 rounded-full"></div>
                 </div>
               </div>
-            </div>
-
-            {/* Floating sparkles */}
-            <div className="absolute inset-0 pointer-events-none">
-              <div
-                className="absolute top-0 left-1/2 w-1 h-1 bg-white rounded-full animate-ping"
-                style={{ animationDelay: "0.5s" }}
-              ></div>
-              <div
-                className="absolute bottom-0 right-1/4 w-0.5 h-0.5 bg-yellow-300 rounded-full animate-pulse"
-                style={{ animationDelay: "1s" }}
-              ></div>
-              <div
-                className="absolute top-1/2 left-0 w-0.5 h-0.5 bg-pink-300 rounded-full animate-bounce"
-                style={{ animationDelay: "1.5s" }}
-              ></div>
             </div>
           </div>
         </motion.div>

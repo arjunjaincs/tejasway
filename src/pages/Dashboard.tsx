@@ -111,8 +111,8 @@ export default function Dashboard({ userRole, onLogout }: DashboardProps) {
             {/* Sidebar Header */}
             <div className="p-4 border-b border-sidebar-border">
               <div className="flex items-center gap-2 mb-2">
-                <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center overflow-hidden">
-                  <img src="/kmrl-logo.jpg" alt="KMRL Tejasway Logo" className="w-6 h-6 object-contain" />
+                <div className="w-8 h-8 flex items-center justify-center overflow-hidden">
+                  <img src="/kmrl-logo.jpg" alt="KMRL Tejasway Logo" className="w-8 h-8 object-contain" />
                 </div>
                 <div>
                   <h3 className="text-sm font-semibold text-sidebar-foreground">KMRL Dashboard</h3>
