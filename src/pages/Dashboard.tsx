@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { FileText, BarChart3, Shield, Settings, LogOut, Menu, X, Home, Users, Database } from "lucide-react"
+import { FileText, BarChart3, Shield, Settings, LogOut, Menu, X, Home, Users } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { ThemeToggle } from "@/components/ui/theme-toggle"
 import { AlertsDropdown } from "@/components/alerts-dropdown"
@@ -111,8 +111,8 @@ export default function Dashboard({ userRole, onLogout }: DashboardProps) {
             {/* Sidebar Header */}
             <div className="p-4 border-b border-sidebar-border">
               <div className="flex items-center gap-2 mb-2">
-                <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-                  <Database className="w-5 h-5 text-primary-foreground" />
+                <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center overflow-hidden">
+                  <img src="/kmrl-logo.jpg" alt="KMRL Tejasway Logo" className="w-6 h-6 object-contain" />
                 </div>
                 <div>
                   <h3 className="text-sm font-semibold text-sidebar-foreground">KMRL Dashboard</h3>
